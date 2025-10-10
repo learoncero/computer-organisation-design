@@ -1,13 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Security.Cryptography;
-using System.Text;
 
 namespace RiscVDisassembler
 {
     internal class RiscVDisassembler
     {
-        private static string[] registers = {
+        private static string[] Registers = {
             "x0","x1","x2","x3","x4","x5","x6","x7",
             "x8","x9","x10","x11","x12","x13","x14","x15",
             "x16","x17","x18","x19","x20","x21","x22","x23",
@@ -16,15 +16,32 @@ namespace RiscVDisassembler
 
         private static void Main()
         {
-            uint[] program = {
-                0xFE010113, 0x00812E23, 0x02010413, 0xFEA42623,
-                0xFEC42783, 0x02F787B3, 0x00078513, 0x01C12403,
-                0x02010113, 0x00008067,
-            };
+            string filePath = "Resources\\program.txt";
+            List<uint> program = new List<uint>();
+
+            foreach (string line in File.ReadAllLines(filePath)) {
+                // skip empty lines
+                if (string.IsNullOrWhiteSpace(line))
+                    continue;
+
+                // split by commas
+                string[] parts = line.Split(',');
+
+                foreach (string part in parts) {
+                    string trimmed = part.Trim();
+
+                    if (string.IsNullOrEmpty(trimmed))
+                        continue;
+
+                    // parse hex to uint
+                    uint instruction = Convert.ToUInt32(trimmed, 16);
+                    program.Add(instruction);
+                }
+            }
 
             foreach (uint instruction in program) {
-                string disassembledInstruction = Disassemble(instruction);
-                Console.WriteLine($"0x{instruction:X8} : {disassembledInstruction}");
+                string disassembledinstruction = Disassemble(instruction);
+                Console.WriteLine($"0x{instruction:x8} : {disassembledinstruction}");
 
             }
         }
@@ -32,40 +49,18 @@ namespace RiscVDisassembler
         private static string Disassemble(uint instruction) {
             uint opcode = instruction & 0x7F; // 0x7F = extract the 7 least significant bits by masking it with 0111 1111
 
-            switch (opcode) {
-                case 0x33:
-                    return DisassembleRType(instruction);
-                case 0xB3:
-                    return DisassembleRType(instruction);
-                case 0x13:
-                    return DisassembleITypeArithmetic(instruction);
-                case 0x23:
-                    return DisassembleSType(instruction);
-                case 0x03:
-                    return DisassembleITypeLoad(instruction);
-                case 0x67: 
-                    return DisassembleJalr(instruction);
-                default:
-                    return "unknown opcode";
-            }
-            
-        }
-
-        private static string DisassembleJalr(uint instruction) {
-            uint rd = ((instruction >> 7) & 0x1F);
-            uint funct3 = ((instruction >> 12) & 0x7);
-            uint rs1 = ((instruction >> 15) & 0x1F);
-            uint imm = ((instruction >> 20) & 0xFFF);
-
-            // Check special-case RET
-            if (funct3 == 0 && rd == 0 && rs1 == 1 && imm == 0)
-                return "ret";
-
-            // Otherwise, normal JALR
-            if (funct3 == 0)
-                return $"jalr {registers[rd]}, {imm}({registers[rs1]})";
-
-            return "unknown JALR";
+            return opcode switch {
+                0x33 => DisassembleRType(instruction),
+                0x13 => DisassembleITypeArithmetic(instruction),
+                0x03 => DisassembleITypeLoad(instruction),
+                0x23 => DisassembleSType(instruction),
+                0x67 => DisassembleJalr(instruction),
+                0x6F => DisassembleJal(instruction),
+                0x37 => DisassembleUTypeLUI(instruction),
+                0x17 => DisassembleUTypeAUIPC(instruction),
+                0x63 => DisassembleBType(instruction),
+                _ => $"unknown opcode 0x{opcode:X2}"
+            };
         }
 
         private static string DisassembleRType(uint instruction) {
@@ -75,106 +70,62 @@ namespace RiscVDisassembler
             uint rs2 = ((instruction >> 20) & 0x1F);
             uint funct7 = ((instruction >> 25) & 0x7F);
 
-            if ((funct3 == 0) && (funct7 == 0)) {
-                return $"add {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 2) && (funct7 == 0)) {
-                return $"slt {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 7) && (funct7 == 0)) {
-                return $"and {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 6) && (funct7 == 0)) {
-                return $"or {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 4) && (funct7 == 0)) {
-                return $"xor {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 1) && (funct7 == 0)) {
-                return $"sll {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 5) && (funct7 == 0)) {
-                return $"srl {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-            
-            if ((funct3 == 0) && (funct7 == 32)) {
-                return $"sub {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 5) && (funct7 == 32)) {
-                return $"sra {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            // RV32M Standard Extension
-
-            if ((funct3 == 0) && (funct7 == 1)) {
-                return $"mul {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 1) && (funct7 == 1)) {
-                return $"mulh {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 2) && (funct7 == 1)) {
-                return $"mulhsu {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 3) && (funct7 == 1)) {
-                return $"mulhu {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 4) && (funct7 == 1)) {
-                return $"div {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 5) && (funct7 == 1)) {
-                return $"divu {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 6) && (funct7 == 1)) {
-                return $"rem {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            if ((funct3 == 7) && (funct7 == 1)) {
-                return $"remu {registers[rd]}, {registers[rs1]}, {registers[rs2]}";
-            }
-
-            return "unknown R-type";
+            return (funct3, funct7) switch {
+                (0, 0) => $"add {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (0, 32) => $"sub {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (1, 0) => $"sll {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (2, 0) => $"slt {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (4, 0) => $"xor {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (5, 0) => $"srl {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (5, 32) => $"sra {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (6, 0) => $"or {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (7, 0) => $"and {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                // RV32M extension
+                (0, 1) => $"mul {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (1, 1) => $"mulh {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (2, 1) => $"mulhsu {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (3, 1) => $"mulhu {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (4, 1) => $"div {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (5, 1) => $"divu {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (6, 1) => $"rem {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                (7, 1) => $"remu {Registers[rd]}, {Registers[rs1]}, {Registers[rs2]}",
+                _ => $"unknown R-type funct3={funct3}, funct7={funct7}"
+            };
         }
 
         private static string DisassembleITypeArithmetic(uint instruction) {
             uint rd = ((instruction >> 7) & 0x1F);
             uint funct3 = ((instruction >> 12) & 0x7);
             uint rs1 = ((instruction >> 15) & 0x1F);
-            uint imm = ((instruction >> 20) & 0xFFF);
+            int imm = SignExtend12((int)((instruction >> 20) & 0xFFF));
 
-            if (funct3 == 0) {
-                return $"addi {registers[rd]}, {registers[rs1]}, {imm}";
-            }
+            return funct3 switch {
+                0 => $"addi {Registers[rd]}, {Registers[rs1]}, {imm}",
+                2 => $"slti {Registers[rd]}, {Registers[rs1]}, {imm}",
+                4 => $"xori {Registers[rd]}, {Registers[rs1]}, {imm}",
+                6 => $"ori {Registers[rd]}, {Registers[rs1]}, {imm}",
+                7 => $"andi {Registers[rd]}, {Registers[rs1]}, {imm}",
+                1 => $"slli {Registers[rd]}, {Registers[rs1]}, {imm & 0x1F}", // shift amounts only lower 5 bits
+                5 when ((instruction >> 25) & 0x7F) == 0 => $"srli {Registers[rd]}, {Registers[rs1]}, {imm & 0x1F}",
+                5 when ((instruction >> 25) & 0x7F) == 32 => $"srai {Registers[rd]}, {Registers[rs1]}, {imm & 0x1F}",
+                _ => $"unknown I-type Arithmetic funct3={funct3}"
+            };
+        }
 
-            if (funct3 == 2) {
-                return $"slti {registers[rd]}, {registers[rs1]}, {imm}";
-            }
+        private static string DisassembleITypeLoad(uint instruction) {
+            uint rd = ((instruction >> 7) & 0x1F);
+            uint funct3 = ((instruction >> 12) & 0x7);
+            uint rs1 = ((instruction >> 15) & 0x1F);
+            int imm = SignExtend12((int)((instruction >> 20) & 0xFFF));
 
-            if (funct3 == 7) {
-                return $"andi {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            if (funct3 == 6) {
-                return $"ori {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            if (funct3 == 4) {
-                return $"xori {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            return "unknown I-type Arithmetic";
+            return funct3 switch {
+                0 => $"lb {Registers[rd]}, {imm}({Registers[rs1]})",
+                1 => $"lh {Registers[rd]}, {imm}({Registers[rs1]})",
+                2 => $"lw {Registers[rd]}, {imm}({Registers[rs1]})",
+                3 => $"lbu {Registers[rd]}, {imm}({Registers[rs1]})",
+                4 => $"lhu {Registers[rd]}, {imm}({Registers[rs1]})",
+                _ => $"unknown I-type Load funct3={funct3}"
+            };
         }
 
         private static string DisassembleSType(uint instruction) {
@@ -183,52 +134,89 @@ namespace RiscVDisassembler
             uint rs1 = ((instruction >> 15) & 0x1F);
             uint rs2 = ((instruction >> 20) & 0x1F);
             uint imm11_5 = ((instruction >> 25) & 0x7F);
+            int imm = SignExtend12((int)((imm11_5 << 5) | imm4_0));
 
-            uint imm = (imm11_5 << 5) | imm4_0;
-
-            if (funct3 == 0) {
-                return $"sb {registers[rs2]}, {imm}({registers[rs1]})";
-            }
-
-            if (funct3 == 1) {
-                return $"sh {registers[rs2]}, {imm}({registers[rs1]})";
-            }
-
-            if (funct3 == 2) {
-                return $"sw {registers[rs2]}, {imm}({registers[rs1]})";
-
-            }
-
-            return "unknown S-type";
+            return funct3 switch {
+                0 => $"sb {Registers[rs2]}, {imm}({Registers[rs1]})",
+                1 => $"sh {Registers[rs2]}, {imm}({Registers[rs1]})",
+                2 => $"sw {Registers[rs2]}, {imm}({Registers[rs1]})",
+                _ => $"unknown S-type funct3={funct3}"
+            };
         }
 
-        private static string DisassembleITypeLoad(uint instruction) {
+        private static string DisassembleJalr(uint instruction) {
             uint rd = ((instruction >> 7) & 0x1F);
             uint funct3 = ((instruction >> 12) & 0x7);
             uint rs1 = ((instruction >> 15) & 0x1F);
             uint imm = ((instruction >> 20) & 0xFFF);
 
+            // Check special-case RET
+            if (funct3 == 0 && rd == 0 && rs1 == 1 && imm == 0) {
+                return "ret";
+            }
+
+            // Otherwise, normal JALR
             if (funct3 == 0) {
-                return $"lb {registers[rd]}, {registers[rs1]}, {imm}";
+                return $"jalr {Registers[rd]}, {imm}({Registers[rs1]})";
+            } else {
+                return "unknown JALR";
             }
-
-            if (funct3 == 1) {
-                return $"lh {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            if (funct3 == 2) {
-                return $"lw {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            if (funct3 == 3) {
-                return $"lbu {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            if (funct3 == 4) {
-                return $"lhu {registers[rd]}, {registers[rs1]}, {imm}";
-            }
-
-            return "unknown I-Type Load";
         }
-    }   
+
+        private static string DisassembleJal(uint instr) {
+            uint rd = (instr >> 7) & 0x1F;
+
+            int imm = ((int)((instr >> 31) & 0x1) << 20) |   // bit 20
+                      ((int)((instr >> 21) & 0x3FF) << 1) |  // bits 10:1
+                      ((int)((instr >> 20) & 0x1) << 11) |   // bit 11
+                      ((int)((instr >> 12) & 0xFF) << 12);   // bits 19:12
+            imm = SignExtend21(imm);
+
+            return $"jal {Registers[rd]}, {imm}";
+        }
+
+        private static string DisassembleUTypeLUI(uint instruction) {
+            uint rd = ((instruction >> 7) & 0x1F);
+            int imm = (int)(instruction & 0xFFFFF000);
+
+            return $"lui {Registers[rd]}, 0x{imm:X}";
+        }
+
+        private static string DisassembleUTypeAUIPC(uint instr) {
+            uint rd = (instr >> 7) & 0x1F;
+            int imm = (int)(instr & 0xFFFFF000);
+
+            return $"auipc {Registers[rd]}, 0x{imm:X}";
+        }
+
+        private static string DisassembleBType(uint instruction) {
+            uint funct3 = (instruction >> 12) & 0x7;
+            uint rs1 = (instruction >> 15) & 0x1F;
+            uint rs2 = (instruction >> 20) & 0x1F;
+
+            // Construct 12-bit immediate from B-type encoding
+            int imm = ((int)((instruction >> 31) & 0x1) << 12) |   // bit 12 (sign)
+                      ((int)((instruction >> 25) & 0x3F) << 5) |    // bits 10:5
+                      ((int)((instruction >> 8) & 0xF) << 1) |      // bits 4:1
+                      ((int)((instruction >> 7) & 0x1) << 11);      // bit 11
+
+            // Sign-extend 13-bit immediate (bits 12:0)
+            if ((imm & 0x1000) != 0)
+                imm |= unchecked((int)0xFFFFE000);
+
+            return funct3 switch {
+                0 => $"beq {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                1 => $"bne {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                4 => $"blt {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                5 => $"bge {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                6 => $"bltu {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                7 => $"bgeu {Registers[rs1]}, {Registers[rs2]}, {imm}",
+                _ => $"unknown B-type funct3={funct3}"
+            };
+        }
+
+        // helpers for sign-extension
+        private static int SignExtend12(int imm) => (imm & 0x800) != 0 ? imm | unchecked((int)0xFFFFF000) : imm;
+        private static int SignExtend21(int imm) => (imm & 0x100000) != 0 ? imm | unchecked((int)0xFFE00000) : imm;
+    }
 }
