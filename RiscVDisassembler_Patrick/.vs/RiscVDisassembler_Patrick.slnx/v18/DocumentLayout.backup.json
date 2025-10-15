@@ -1,0 +1,75 @@
+{
+  "Version": 1,
+  "WorkspaceRootPath": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\",
+  "Documents": [
+    {
+      "AbsoluteMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|solutionrelative:RiscVDisassembler_Patrick\\main.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\insmem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|solutionrelative:RiscVDisassembler_Patrick\\insmem.cpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    },
+    {
+      "AbsoluteMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\insmem.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}",
+      "RelativeMoniker": "D:0:0:{0A2D2000-8DFF-4816-B313-C918BDBACB0A}|RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick.vcxproj|solutionrelative:RiscVDisassembler_Patrick\\insmem.hpp||{D0E1A5C6-B359-4E41-9B60-3365922C2A22}"
+    }
+  ],
+  "DocumentGroupContainers": [
+    {
+      "Orientation": 0,
+      "VerticalTabListWidth": 256,
+      "DocumentGroups": [
+        {
+          "DockedWidth": 200,
+          "SelectedChildIndex": 1,
+          "Children": [
+            {
+              "$type": "Bookmark",
+              "Name": "ST:0:0:{c6f34f0d-7ae5-4f3a-be61-fe0c21ae9eb8}"
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 0,
+              "Title": "main.cpp",
+              "DocumentMoniker": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\main.cpp",
+              "RelativeDocumentMoniker": "RiscVDisassembler_Patrick\\main.cpp",
+              "ToolTip": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\main.cpp",
+              "RelativeToolTip": "RiscVDisassembler_Patrick\\main.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAcAAAAlAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-15T08:12:12.6Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 1,
+              "Title": "InsMem.cpp",
+              "DocumentMoniker": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\InsMem.cpp",
+              "RelativeDocumentMoniker": "RiscVDisassembler_Patrick\\InsMem.cpp",
+              "ToolTip": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\InsMem.cpp",
+              "RelativeToolTip": "RiscVDisassembler_Patrick\\InsMem.cpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAwAAAABAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000677|",
+              "WhenOpened": "2025-10-15T08:08:13.947Z",
+              "EditorCaption": ""
+            },
+            {
+              "$type": "Document",
+              "DocumentIndex": 2,
+              "Title": "InsMem.hpp",
+              "DocumentMoniker": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\InsMem.hpp",
+              "RelativeDocumentMoniker": "RiscVDisassembler_Patrick\\InsMem.hpp",
+              "ToolTip": "C:\\Users\\learo\\Code\\Master\\Semester1\\computer-organisation-design\\RiscVDisassembler_Patrick\\RiscVDisassembler_Patrick\\InsMem.hpp",
+              "RelativeToolTip": "RiscVDisassembler_Patrick\\InsMem.hpp",
+              "ViewState": "AgIAAAAAAAAAAAAAAAAAAAoAAAAKAAAAAAAAAA==",
+              "Icon": "ae27a6b0-e345-4288-96df-5eaf394ee369.000680|",
+              "WhenOpened": "2025-10-15T08:07:38.368Z",
+              "EditorCaption": ""
+            }
+          ]
+        }
+      ]
+    }
+  ]
+}
