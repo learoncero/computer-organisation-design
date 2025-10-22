@@ -14,7 +14,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RiscVDisassembler")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+b2d6ded097a8d64929757cfbd68167c9e85cb019")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+7691b0005106141eb38e98076c90989c986edef2")]
 [assembly: System.Reflection.AssemblyProductAttribute("RiscVDisassembler")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RiscVDisassembler")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

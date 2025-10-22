@@ -7,9 +7,9 @@ C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.AssemblyInfoInputs.cache
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.AssemblyInfo.cs
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.csproj.CoreCompileInputs.cache
+C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.sourcelink.json
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.dll
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\refint\RiscVDisassembler.dll
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.pdb
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.genruntimeconfig.cache
 C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\ref\RiscVDisassembler.dll
-C:\Studium\Code\Master\Semester1\computer-organisation-design\RiscVDisassembler\RiscVDisassembler\obj\Debug\net10.0\RiscVDisassembler.sourcelink.json
