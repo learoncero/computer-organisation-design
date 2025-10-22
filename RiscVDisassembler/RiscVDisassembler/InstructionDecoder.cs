@@ -1,7 +1,4 @@
 namespace RiscVDisassembler {
-    /// <summary>
-    /// Represents a decoded RISC-V instruction with all relevant fields.
-    /// </summary>
     internal record DecodedInstruction {
         public uint Opcode { get; init; }
         public uint Rd { get; init; }
@@ -11,9 +8,6 @@ namespace RiscVDisassembler {
         public uint Funct7 { get; init; }
         public int Immediate { get; init; }
 
-        /// <summary>
-        /// Decodes a raw 32-bit instruction into its component fields.
-        /// </summary>
         public static DecodedInstruction Decode(uint instruction) {
             return new DecodedInstruction {
                 Opcode = (instruction >> InstructionConstants.OpcodeShift) & InstructionConstants.OpcodeMask,
@@ -27,18 +21,12 @@ namespace RiscVDisassembler {
         }
     }
 
-    /// <summary>
-    /// Decodes and disassembles RISC-V instructions.
-    /// </summary>
     internal static class InstructionDecoder {
-        /// <summary>
-        /// Disassembles a 32-bit RISC-V instruction.
-        /// </summary>
         public static string Disassemble(uint instruction) {
             var decoded = DecodedInstruction.Decode(instruction);
 
             return decoded.Opcode switch {
-                InstructionConstants.OpcodeRType => DisassembleRType(instruction, decoded),
+                InstructionConstants.OpcodeRType => DisassembleRType(decoded),
                 InstructionConstants.OpcodeITypeArith => DisassembleITypeArithmetic(instruction, decoded),
                 InstructionConstants.OpcodeITypeLoad => DisassembleITypeLoad(instruction, decoded),
                 InstructionConstants.OpcodeSType => DisassembleSType(instruction, decoded),
@@ -51,7 +39,7 @@ namespace RiscVDisassembler {
             };
         }
 
-        private static string DisassembleRType(uint instruction, DecodedInstruction decoded) {
+        private static string DisassembleRType(DecodedInstruction decoded) {
             string rd = RegisterSet.GetRegisterName(decoded.Rd);
             string rs1 = RegisterSet.GetRegisterName(decoded.Rs1);
             string rs2 = RegisterSet.GetRegisterName(decoded.Rs2);
@@ -171,7 +159,6 @@ namespace RiscVDisassembler {
         }
 
         private static string DisassembleBType(uint instruction, DecodedInstruction decoded) {
-            // Construct 12-bit immediate from B-type encoding
             int imm = ((int)((instruction >> 31) & 0x1) << 12) |   // bit 12 (sign)
                       ((int)((instruction >> 25) & 0x3F) << 5) |    // bits 10:5
                       ((int)((instruction >> 8) & 0xF) << 1) |      // bits 4:1

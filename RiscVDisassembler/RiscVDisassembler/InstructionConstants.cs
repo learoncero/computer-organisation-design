@@ -3,7 +3,7 @@ namespace RiscVDisassembler
     internal static class InstructionConstants
     {
         // Bit masks
-        public const uint OpcodeMask = 0x7F;      // bits 6:0
+        public const uint OpcodeMask = 0x7F;      // 6 bits
         public const uint RdMask = 0x1F;          // 5 bits
         public const uint Funct3Mask = 0x7;       // 3 bits
         public const uint Rs1Mask = 0x1F;         // 5 bits
