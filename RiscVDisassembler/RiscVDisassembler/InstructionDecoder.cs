@@ -7,8 +7,13 @@ namespace RiscVDisassembler {
         public uint Funct3 { get; init; }
         public uint Funct7 { get; init; }
         public int Immediate { get; init; }
+        public bool IsValid { get; init; } = true;
 
         public static DecodedInstruction Decode(uint instruction) {
+            if ((instruction & InstructionConstants.Base32IntegerMask) != 0x03) {
+                return new DecodedInstruction { IsValid = false };
+            }
+
             return new DecodedInstruction {
                 Opcode = (instruction >> InstructionConstants.OpcodeShift) & InstructionConstants.OpcodeMask,
                 Rd = (instruction >> InstructionConstants.RdShift) & InstructionConstants.RdMask,
@@ -16,7 +21,8 @@ namespace RiscVDisassembler {
                 Rs2 = (instruction >> InstructionConstants.Rs2Shift) & InstructionConstants.Rs2Mask,
                 Funct3 = (instruction >> InstructionConstants.Funct3Shift) & InstructionConstants.Funct3Mask,
                 Funct7 = (instruction >> InstructionConstants.Funct7Shift) & InstructionConstants.Funct7Mask,
-                Immediate = 0 // Will be computed based on instruction type
+                Immediate = 0, // Will be computed based on instruction type
+                IsValid = true
             };
         }
     }
@@ -24,6 +30,10 @@ namespace RiscVDisassembler {
     internal static class InstructionDecoder {
         public static string Disassemble(uint instruction) {
             var decoded = DecodedInstruction.Decode(instruction);
+
+            if (!decoded.IsValid) {
+                return $"invalid instruction (not 32-bit base format)";
+            }
 
             return decoded.Opcode switch {
                 InstructionConstants.OpcodeRType => DisassembleRType(decoded),

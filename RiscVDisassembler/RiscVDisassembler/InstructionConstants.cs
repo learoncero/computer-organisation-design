@@ -3,15 +3,16 @@ namespace RiscVDisassembler
     internal static class InstructionConstants
     {
         // Bit masks
-        public const uint OpcodeMask = 0x7F;      // 6 bits
-        public const uint RdMask = 0x1F;          // 5 bits
-        public const uint Funct3Mask = 0x7;       // 3 bits
-        public const uint Rs1Mask = 0x1F;         // 5 bits
-        public const uint Rs2Mask = 0x1F;         // 5 bits
-        public const uint Funct7Mask = 0x7F;      // 7 bits
-        public const uint Imm12Mask = 0xFFF;      // 12 bits
-        public const uint Imm20Mask = 0xFFFFF000; // upper 20 bits
-        public const uint ShiftMask = 0x1F;       // 5 bits for shift amount
+        public const uint Base32IntegerMask = 0x03; // 2 bits
+        public const uint OpcodeMask = 0x7F;        // 6 bits
+        public const uint RdMask = 0x1F;            // 5 bits
+        public const uint Funct3Mask = 0x7;         // 3 bits
+        public const uint Rs1Mask = 0x1F;           // 5 bits
+        public const uint Rs2Mask = 0x1F;           // 5 bits
+        public const uint Funct7Mask = 0x7F;        // 7 bits
+        public const uint Imm12Mask = 0xFFF;        // 12 bits
+        public const uint Imm20Mask = 0xFFFFF000;   // upper 20 bits
+        public const uint ShiftMask = 0x1F;         // 5 bits for shift amount
 
         // Bit shift positions
         public const int OpcodeShift = 0;
